@@ -281,6 +281,7 @@ eat_whitespace:
 		);													      
 
 		     BT_TEST_KEYWORD("let", token, BT_TOKEN_LET)
+		else BT_TEST_KEYWORD("var", token, BT_TOKEN_VAR)
 		else BT_TEST_KEYWORD("const", token, BT_TOKEN_CONST)
 		else BT_TEST_KEYWORD("fn", token, BT_TOKEN_FN)
 		else BT_TEST_KEYWORD("return", token, BT_TOKEN_RETURN)

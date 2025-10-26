@@ -2493,15 +2493,16 @@ static bt_AstNode* generate_initializer(bt_Parser* parse, bt_Type* type, bt_Toke
     return result;
 }
 
-static bt_AstNode* parse_let(bt_Parser* parse)
+static bt_AstNode* parse_var_binding(bt_Parser* parse, bt_bool is_const)
 {
     bt_Tokenizer* tok = parse->tokenizer;
     bt_AstNode* node = make_node(parse, BT_AST_NODE_LET);
     node->source = bt_tokenizer_peek(tok);
-    node->as.let.is_const = BT_FALSE;
+    node->as.let.is_const = is_const;
 
     bt_Token* name_or_const = bt_tokenizer_emit(tok);
 
+	//TODO: remove the 'const' keyword support in 'let' statements
     if (name_or_const->type == BT_TOKEN_CONST) {
         node->as.let.is_const = BT_TRUE;
         name_or_const = bt_tokenizer_emit(tok);
@@ -3513,7 +3514,11 @@ static bt_AstNode* parse_statement(bt_Parser* parse)
     } break;
     case BT_TOKEN_LET: {
         bt_tokenizer_emit(tok);
-        return parse_let(parse);
+        return parse_var_binding(parse, BT_TRUE);
+    } break;
+    case BT_TOKEN_VAR:{
+        bt_tokenizer_emit(tok);
+        return parse_var_binding(parse, BT_FALSE);
     } break;
     case BT_TOKEN_RETURN: {
         bt_tokenizer_emit(tok);
